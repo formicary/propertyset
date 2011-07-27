@@ -27,7 +27,7 @@ public class PropertySetManager {
      * Consult the javadocs for a particular propertyset to see what arguments
      * it requires and supports.
      */
-    public static PropertySet getInstance(String name, Map args) {
+    public static PropertySet getInstance(String name, Map<String, Object> args) {
         PropertySet ps = getInstance(name, args, PropertySetManager.class.getClassLoader());
 
         if (ps == null) {
@@ -41,10 +41,10 @@ public class PropertySetManager {
      * @see #getInstance(String, java.util.Map)
      * @param loader The classloader to use for loading the propertyset.
      */
-    public static PropertySet getInstance(String name, Map args, ClassLoader loader) {
+    public static PropertySet getInstance(String name, Map<String, Object> args, ClassLoader loader) {
         PropertySetConfig psc = PropertySetConfig.getConfig();
         String clazz = psc.getClassName(name);
-        Map config = psc.getArgs(name);
+        Map<String, String> config = psc.getArgs(name);
         Class psClass;
 
         try {

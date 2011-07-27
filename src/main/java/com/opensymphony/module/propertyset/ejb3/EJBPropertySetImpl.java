@@ -4,7 +4,6 @@
  */
 package com.opensymphony.module.propertyset.ejb3;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.util.*;
 import javax.annotation.PostConstruct;
@@ -216,8 +215,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     return entry != null;
   }
 
-  public void init(Map config, Map args)
-  {
+  public void init(Map<String, String> config, Map<String, Object> args) {
     Object obj = args.get("manager");
 
     if(obj == null)

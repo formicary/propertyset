@@ -7,8 +7,6 @@ package com.opensymphony.module.propertyset.cached;
 import com.opensymphony.module.propertyset.*;
 import com.opensymphony.module.propertyset.memory.SerializablePropertySet;
 
-import org.w3c.dom.Document;
-
 import java.io.Serializable;
 
 import java.util.*;
@@ -68,7 +66,7 @@ public class CachingPropertySet implements PropertySet, Serializable {
                 setString(key, (String) value);
             }
         } else if (value instanceof Date) {
-            setDate(key, (Date) value);
+            setDate(key, (Date)value);
         } else {
             setObject(key, value);
         }
@@ -85,17 +83,17 @@ public class CachingPropertySet implements PropertySet, Serializable {
             break;
 
         case INT:
-            value = new Integer(getInt(key));
+            value = getInt(key);
 
             break;
 
         case LONG:
-            value = new Long(getLong(key));
+            value = getLong(key);
 
             break;
 
         case DOUBLE:
-            value = new Double(getDouble(key));
+            value = getDouble(key);
 
             break;
 
@@ -175,19 +173,19 @@ public class CachingPropertySet implements PropertySet, Serializable {
         return cachePS.getInt(key);
     }
 
-    public Collection getKeys() throws PropertyException {
+    public Collection<String> getKeys() throws PropertyException {
         return decoratedPS.getKeys();
     }
 
-    public Collection getKeys(int type) throws PropertyException {
+    public Collection<String> getKeys(int type) throws PropertyException {
         return decoratedPS.getKeys(type);
     }
 
-    public Collection getKeys(String prefix) throws PropertyException {
+    public Collection<String> getKeys(String prefix) throws PropertyException {
         return decoratedPS.getKeys(prefix);
     }
 
-    public Collection getKeys(String prefix, int type) throws PropertyException {
+    public Collection<String> getKeys(String prefix, int type) throws PropertyException {
         return decoratedPS.getKeys(prefix, type);
     }
 
@@ -255,10 +253,10 @@ public class CachingPropertySet implements PropertySet, Serializable {
         return decoratedPS.exists(key);
     }
 
-    public void init(Map config, Map args) {
+  public void init(Map<String, String> config, Map<String, Object> args) {
         decoratedPS = (PropertySet) args.get("PropertySet");
 
-        String serializableName = (String) config.get("serializableName");
+        String serializableName = config.get("serializableName");
 
         if (serializableName == null) {
             serializableName = "serializable";
@@ -268,7 +266,7 @@ public class CachingPropertySet implements PropertySet, Serializable {
 
         Boolean bulkload = (Boolean) args.get("bulkload");
 
-        if ((bulkload != null) && bulkload.booleanValue()) {
+        if ((bulkload != null) && bulkload) {
             PropertySetManager.clone(decoratedPS, cachePS);
         }
     }

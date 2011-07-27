@@ -13,6 +13,7 @@ import java.io.InputStream;
 
 import java.net.URL;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -38,8 +39,8 @@ public class PropertySetConfig {
 
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private HashMap propertySetArgs = new HashMap();
-    private HashMap propertySets = new HashMap();
+    private HashMap<String, Map<String, String>> propertySetArgs = new HashMap<String, Map<String, String>>();
+    private HashMap<String, String> propertySets = new HashMap<String, String>();
 
     //~ Constructors ///////////////////////////////////////////////////////////
 
@@ -87,7 +88,7 @@ public class PropertySetConfig {
 
             // get args now
             NodeList args = propertySet.getElementsByTagName("arg");
-            HashMap argsMap = new HashMap();
+            HashMap<String, String> argsMap = new HashMap<String, String>();
 
             for (int j = 0; j < args.getLength(); j++) {
                 Element arg = (Element) args.item(j);
@@ -113,12 +114,12 @@ public class PropertySetConfig {
         }
     }
 
-    public Map getArgs(String name) {
-        return (Map) propertySetArgs.get(name);
+    public Map<String, String> getArgs(String name) {
+        return propertySetArgs.get(name);
     }
 
     public String getClassName(String name) {
-        return (String) propertySets.get(name);
+        return propertySets.get(name);
     }
 
     /**
@@ -165,27 +166,25 @@ public class PropertySetConfig {
     private InputStream load() throws IllegalArgumentException {
         InputStream is = null;
 
-        for (int i = 0; i < CONFIG_LOCATIONS.length; i++) {
-            String location = CONFIG_LOCATIONS[i];
+      for(String location : CONFIG_LOCATIONS) {
+        try {
+          URL resource = getResource(location, this.getClass());
 
-            try {
-                URL resource = getResource(location, this.getClass());
+          if(resource != null) {
+            is = resource.openStream();
+          }
 
-                if (resource != null) {
-                    is = resource.openStream();
-                }
-
-                //if we have found something then stop looking
-                if (is != null) {
-                    return is;
-                }
-            } catch (Exception e) {
-                //do nothing.
-            }
+          //if we have found something then stop looking
+          if(is != null) {
+            return is;
+          }
+        } catch(Exception e) {
+          //do nothing.
         }
+      }
 
         if (is == null) {
-            String exceptionMessage = "Could not load propertyset config using '" + CONFIG_LOCATIONS + "'.  Please check your classpath.";
+            String exceptionMessage = "Could not load propertyset config using '" + Arrays.toString(CONFIG_LOCATIONS) + "'.  Please check your classpath.";
             throw new IllegalArgumentException(exceptionMessage);
         }
 

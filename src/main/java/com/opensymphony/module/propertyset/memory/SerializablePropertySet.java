@@ -35,7 +35,7 @@ public class SerializablePropertySet extends MemoryPropertySet implements Serial
 
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private HashMap serialMap;
+    private HashMap<String, Object> serialMap;
 
     //~ Methods ////////////////////////////////////////////////////////////////
 
@@ -55,7 +55,7 @@ public class SerializablePropertySet extends MemoryPropertySet implements Serial
         super.setImpl(type, key, value);
     }
 
-    protected HashMap getMap() {
+    protected HashMap<String, Object> getMap() {
         return serialMap;
     }
 }

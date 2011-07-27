@@ -71,22 +71,22 @@ public abstract class AbstractPropertySet implements PropertySet {
 
         switch (type) {
         case BOOLEAN:
-            value = Boolean.valueOf(getBoolean(key));
+            value = getBoolean(key);
 
             break;
 
         case INT:
-            value = new Integer(getInt(key));
+            value = getInt(key);
 
             break;
 
         case LONG:
-            value = new Long(getLong(key));
+            value = getLong(key);
 
             break;
 
         case DOUBLE:
-            value = new Double(getDouble(key));
+            value = getDouble(key);
 
             break;
 
@@ -120,7 +120,7 @@ public abstract class AbstractPropertySet implements PropertySet {
 
     public boolean getBoolean(String key) {
         try {
-            return ((Boolean) get(BOOLEAN, key)).booleanValue();
+            return (Boolean)get(BOOLEAN, key);
         } catch (NullPointerException e) {
             return false;
         }
@@ -139,24 +139,24 @@ public abstract class AbstractPropertySet implements PropertySet {
     }
 
     public void setDouble(String key, double value) {
-        set(DOUBLE, key, new Double(value));
+        set(DOUBLE, key, value);
     }
 
     public double getDouble(String key) {
         try {
-            return ((Double) get(DOUBLE, key)).doubleValue();
+            return (Double)get(DOUBLE, key);
         } catch (NullPointerException e) {
             return 0.0;
         }
     }
 
     public void setInt(String key, int value) {
-        set(INT, key, new Integer(value));
+        set(INT, key, value);
     }
 
     public int getInt(String key) {
         try {
-            return ((Integer) get(INT, key)).intValue();
+            return (Integer)get(INT, key);
         } catch (NullPointerException e) {
             return 0;
         }
@@ -165,21 +165,21 @@ public abstract class AbstractPropertySet implements PropertySet {
     /**
      * Calls <code>getKeys(null,0)</code>
      */
-    public Collection getKeys() throws PropertyException {
+    public Collection<String> getKeys() throws PropertyException {
         return getKeys(null, 0);
     }
 
     /**
      * Calls <code>getKeys(null,type)</code>
      */
-    public Collection getKeys(int type) throws PropertyException {
+    public Collection<String> getKeys(int type) throws PropertyException {
         return getKeys(null, type);
     }
 
     /**
      * Calls <code>getKeys(prefix,0)</code>
      */
-    public Collection getKeys(String prefix) throws PropertyException {
+    public Collection<String> getKeys(String prefix) throws PropertyException {
         return getKeys(prefix, 0);
     }
 
@@ -245,7 +245,7 @@ public abstract class AbstractPropertySet implements PropertySet {
         }
     }
 
-  public void init(Map config, Map args) {
+  public void init(Map<String, String> config, Map<String, Object> args) {
         // nothing
     }
 

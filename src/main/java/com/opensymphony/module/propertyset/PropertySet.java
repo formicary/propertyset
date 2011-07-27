@@ -120,7 +120,7 @@ public interface PropertySet {
     * @return Unmodifiable {@link java.util.Collection} of
     *         {@link java.lang.String}s.
     */
-    Collection getKeys() throws PropertyException;
+    Collection<String> getKeys() throws PropertyException;
 
     /**
     * List all keys of certain type.
@@ -130,7 +130,7 @@ public interface PropertySet {
     * @return Unmodifiable {@link java.util.Collection} of
     *         {@link java.lang.String}s.
     */
-    Collection getKeys(int type) throws PropertyException;
+    Collection<String> getKeys(int type) throws PropertyException;
 
     /**
     * List all keys starting with supplied prefix.
@@ -140,20 +140,21 @@ public interface PropertySet {
     * @return Unmodifiable {@link java.util.Collection} of
     *         {@link java.lang.String}s.
     */
-    Collection getKeys(String prefix) throws PropertyException;
+    Collection<String> getKeys(String prefix) throws PropertyException;
 
     /**
     * List all keys starting with supplied prefix of certain type. See
     * statics.
     *
-    * @param prefix String that keys must start with. If null, than all
-    *        keys shall be returned.
-    * @param type Type to list. See static class variables. If null, then
-    *        all types shall be returned.
-    * @return Unmodifiable {@link java.util.Collection} of
+    *
+     * @param prefix String that keys must start with. If null, than all
+     *        keys shall be returned.
+     * @param type Type to list. See static class variables. If null, then
+     *        all types shall be returned.
+     * @return Unmodifiable {@link java.util.Collection} of
     *         {@link java.lang.String}s.
     */
-    Collection getKeys(String prefix, int type) throws PropertyException;
+    Collection<String> getKeys(String prefix, int type) throws PropertyException;
 
     void setLong(String key, long value) throws PropertyException;
 
@@ -195,7 +196,7 @@ public interface PropertySet {
     */
     boolean exists(String key) throws PropertyException;
 
-    void init(Map config, Map args);
+    void init(Map<String, String> config, Map<String, Object> args);
 
     /**
     * Removes property.

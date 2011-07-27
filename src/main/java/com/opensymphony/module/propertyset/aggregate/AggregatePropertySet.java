@@ -6,8 +6,6 @@ package com.opensymphony.module.propertyset.aggregate;
 
 import com.opensymphony.module.propertyset.*;
 
-import org.w3c.dom.Document;
-
 import java.io.Serializable;
 
 import java.util.*;
@@ -31,13 +29,13 @@ import java.util.*;
  */
 public class AggregatePropertySet extends AbstractPropertySet implements Serializable {
 
-    private List propertySets;
+    private List<PropertySet> propertySets;
 
     //~ Methods ////////////////////////////////////////////////////////////////
 
-    public Collection getKeys(String prefix, int type) throws PropertyException {
+    public Collection<String> getKeys(String prefix, int type) throws PropertyException {
         Iterator i = propertySets.iterator();
-        Collection keys = new ArrayList();
+        Collection<String> keys = new ArrayList<String>();
 
         while (i.hasNext()) {
             PropertySet set = (PropertySet) i.next();
@@ -53,15 +51,12 @@ public class AggregatePropertySet extends AbstractPropertySet implements Seriali
     }
 
     public boolean isSettable(String property) {
-        Iterator i = propertySets.iterator();
 
-        while (i.hasNext()) {
-            PropertySet set = (PropertySet) i.next();
-
-            if (set.isSettable(property)) {
-                return true;
-            }
+      for(PropertySet set : propertySets) {
+        if(set.isSettable(property)) {
+          return true;
         }
+      }
 
         return false;
     }
@@ -74,17 +69,14 @@ public class AggregatePropertySet extends AbstractPropertySet implements Seriali
      * they would not be checked.
      */
     public int getType(String key) throws PropertyException {
-        Iterator i = propertySets.iterator();
 
-        while (i.hasNext()) {
-            PropertySet set = (PropertySet) i.next();
-
-            try {
-                return set.getType(key);
-            } catch (PropertyException ex) {
-                    //we don't really care about these
-            }
+      for(PropertySet set : propertySets) {
+        try {
+          return set.getType(key);
+        } catch(PropertyException ex) {
+          //we don't really care about these
         }
+      }
 
         throw new PropertyException("No key " + key + " found");
     }
@@ -94,54 +86,47 @@ public class AggregatePropertySet extends AbstractPropertySet implements Seriali
     }
 
     public boolean exists(String key) throws PropertyException {
-        Iterator i = propertySets.iterator();
 
-        while (i.hasNext()) {
-            PropertySet set = (PropertySet) i.next();
-
-            try {
-                if (set.exists(key)) {
-                    return true;
-                }
-            } catch (PropertyException ex) {
-            }
+      for(PropertySet set : propertySets) {
+        try {
+          if(set.exists(key)) {
+            return true;
+          }
+        } catch(PropertyException ex) {
         }
+      }
 
         return false;
     }
 
-    public void init(Map config, Map args) {
+    public void init(Map<String, String> config, Map<String, Object> args) {
         // TODO document configuration
-        propertySets = (List) args.get("PropertySets");
+        propertySets = (List<PropertySet>)args.get("PropertySets");
 
         if (propertySets == null) {
-            propertySets = new ArrayList();
+            propertySets = new ArrayList<PropertySet>();
         }
     }
 
     public void remove() throws PropertyException {
         if (propertySets != null) {
-            Iterator iter = propertySets.iterator();
 
-            while (iter.hasNext()) {
-                PropertySet ps = (PropertySet) iter.next();
-                ps.remove();
-            }
+          for(Object propertySet : propertySets) {
+            PropertySet ps = (PropertySet)propertySet;
+            ps.remove();
+          }
         }
     }
 
     public void remove(String key) throws PropertyException {
-        Iterator i = propertySets.iterator();
 
-        while (i.hasNext()) {
-            PropertySet set = (PropertySet) i.next();
-
-            try {
-                set.remove(key);
-            } catch (PropertyException ex) {
-                    //we don't really care about these
-            }
+      for(PropertySet set : propertySets) {
+        try {
+          set.remove(key);
+        } catch(PropertyException ex) {
+          //we don't really care about these
         }
+      }
     }
 
     /**
@@ -150,163 +135,157 @@ public class AggregatePropertySet extends AbstractPropertySet implements Seriali
      * rather than setting the same property on all the propertysets.
      */
     protected void setImpl(int type, String key, Object value) throws PropertyException {
-        Iterator i = propertySets.iterator();
 
-        while (i.hasNext()) {
-            PropertySet set = (PropertySet) i.next();
+      for(PropertySet set : propertySets) {
+        try {
+          if(set.isSettable(key)) {
+            switch(type) {
+              case BOOLEAN:
+                set.setBoolean(key, (Boolean)value);
 
-            try {
-                if (set.isSettable(key)) {
-                    switch (type) {
-                    case BOOLEAN:
-                        set.setBoolean(key, ((Boolean) value).booleanValue());
+                return;
 
-                        return;
+              case INT:
+                set.setInt(key, ((Number)value).intValue());
 
-                    case INT:
-                        set.setInt(key, ((Number) value).intValue());
+                return;
 
-                        return;
+              case LONG:
+                set.setLong(key, ((Number)value).longValue());
 
-                    case LONG:
-                        set.setLong(key, ((Number) value).longValue());
+                return;
 
-                        return;
+              case DOUBLE:
+                set.setDouble(key, ((Number)value).doubleValue());
 
-                    case DOUBLE:
-                        set.setDouble(key, ((Number) value).doubleValue());
+                return;
 
-                        return;
+              case STRING:
+                set.setString(key, (String)value);
 
-                    case STRING:
-                        set.setString(key, (String) value);
+                return;
 
-                        return;
+              case TEXT:
+                set.setText(key, (String)value);
 
-                    case TEXT:
-                        set.setText(key, (String) value);
+                return;
 
-                        return;
+              case DATE:
+                set.setDate(key, (Date)value);
 
-                    case DATE:
-                        set.setDate(key, (Date) value);
+                return;
 
-                        return;
+              case OBJECT:
+                set.setObject(key, value);
 
-                    case OBJECT:
-                        set.setObject(key, value);
+                return;
 
-                        return;
-
-}
-                }
-            } catch (PropertyException ex) {
-                //we don't care about these here, sadly
             }
+          }
+        } catch(PropertyException ex) {
+          //we don't care about these here, sadly
         }
+      }
     }
 
     protected Object get(int type, String key) throws PropertyException {
-        Iterator i = propertySets.iterator();
 
-        while (i.hasNext()) {
-            PropertySet set = (PropertySet) i.next();
+      for(PropertySet set : propertySets) {
+        try {
+          //poo, since set.get() is protected, we have to double back
+          //on ourselves and call getXXX(), which in turn will call get
+          switch(type) {
+            case BOOLEAN:
 
-            try {
-                //poo, since set.get() is protected, we have to double back
-                //on ourselves and call getXXX(), which in turn will call get
-                switch (type) {
-                case BOOLEAN:
+              boolean bool = set.getBoolean(key);
 
-                    boolean bool = set.getBoolean(key);
+              if(bool) {
+                return Boolean.TRUE;
+              }
 
-                    if (bool) {
-                        return Boolean.TRUE;
-                    }
+              //If we have false, we need to check if it's missing
+              //property or if it's actually false
+              if(set.exists(key)) {
+                return Boolean.FALSE;
+              }
 
-                    //If we have false, we need to check if it's missing
-                    //property or if it's actually false
-                    if (set.exists(key)) {
-                        return Boolean.FALSE;
-                    }
+              break;
 
-                    break;
+            case INT:
 
-                case INT:
+              int maybeInt = set.getInt(key);
 
-                    int maybeInt = set.getInt(key);
+              if(maybeInt != 0) {
+                return maybeInt;
+              }
 
-                    if (maybeInt != 0) {
-                        return new Integer(maybeInt);
-                    }
+              break;
 
-                    break;
+            case LONG:
 
-                case LONG:
+              long maybeLong = set.getLong(key);
 
-                    long maybeLong = set.getLong(key);
+              if(maybeLong != 0) {
+                return maybeLong;
+              }
 
-                    if (maybeLong != 0) {
-                        return new Long(maybeLong);
-                    }
+              break;
 
-                    break;
+            case DOUBLE:
 
-                case DOUBLE:
+              double maybeDouble = set.getDouble(key);
 
-                    double maybeDouble = set.getDouble(key);
+              if(maybeDouble != 0) {
+                return maybeDouble;
+              }
 
-                    if (maybeDouble != 0) {
-                        return new Double(maybeDouble);
-                    }
+              break;
 
-                    break;
+            case STRING:
 
-                case STRING:
+              String string = set.getString(key);
 
-                    String string = set.getString(key);
+              if(string != null) {
+                return string;
+              }
 
-                    if (string != null) {
-                        return string;
-                    }
+              break;
 
-                    break;
+            case TEXT:
 
-                case TEXT:
+              String text = set.getText(key);
 
-                    String text = set.getText(key);
+              if(text != null) {
+                return text;
+              }
 
-                    if (text != null) {
-                        return text;
-                    }
+              break;
 
-                    break;
+            case DATE:
 
-                case DATE:
+              Date date = set.getDate(key);
 
-                    Date date = set.getDate(key);
+              if(date != null) {
+                return date;
+              }
 
-                    if (date != null) {
-                        return date;
-                    }
+              break;
 
-                    break;
+            case OBJECT:
 
-                case OBJECT:
+              Object obj = set.getObject(key);
 
-                    Object obj = set.getObject(key);
+              if(obj != null) {
+                return obj;
+              }
 
-                    if (obj != null) {
-                        return obj;
-                    }
+              break;
 
-                    break;
-
-                }
-            } catch (PropertyException ex) {
-                //we don't really care about these here
-            }
+          }
+        } catch(PropertyException ex) {
+          //we don't really care about these here
         }
+      }
 
         return null;
     }

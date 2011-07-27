@@ -27,13 +27,13 @@ import java.util.*;
 public class MemoryPropertySet extends AbstractPropertySet {
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private HashMap map;
+    private HashMap<String, Object> map;
 
     //~ Methods ////////////////////////////////////////////////////////////////
 
-    public synchronized Collection getKeys(String prefix, int type) {
+    public synchronized Collection<String> getKeys(String prefix, int type) {
         Iterator keys = getMap().keySet().iterator();
-        List result = new LinkedList();
+        List<String> result = new ArrayList<String>();
 
         while (keys.hasNext()) {
             String key = (String) keys.next();
@@ -68,8 +68,8 @@ public class MemoryPropertySet extends AbstractPropertySet {
         return getType(key) > 0;
     }
 
-    public void init(Map config, Map args) {
-        map = new HashMap();
+  public void init(Map<String, String> config, Map<String, Object> args) {
+        map = new HashMap<String, Object>();
     }
 
     public synchronized void remove(String key) {
@@ -93,10 +93,9 @@ public class MemoryPropertySet extends AbstractPropertySet {
             getMap().put(key, new ValueEntry(type, value));
         }
 
-        return;
     }
 
-    protected HashMap getMap() {
+    protected Map<String, Object> getMap() {
         return map;
     }
 

@@ -28,7 +28,7 @@ import java.util.*;
 public class BeanIntrospectorPropertySet extends AbstractPropertySet {
     //~ Instance fields ////////////////////////////////////////////////////////
 
-    private Map descriptors = new HashMap();
+    private Map<String, PropertyDescriptor> descriptors = new HashMap<String, PropertyDescriptor>();
     private Object bean = null;
 
     //~ Methods ////////////////////////////////////////////////////////////////
@@ -40,38 +40,34 @@ public class BeanIntrospectorPropertySet extends AbstractPropertySet {
             BeanInfo info = Introspector.getBeanInfo(bean.getClass());
             PropertyDescriptor[] beanDescriptors = info.getPropertyDescriptors();
 
-            for (int i = 0; i < beanDescriptors.length; i++) {
-                PropertyDescriptor beanDescriptor = beanDescriptors[i];
-                descriptors.put(beanDescriptor.getName(), beanDescriptor);
-            }
+          for(PropertyDescriptor beanDescriptor : beanDescriptors) {
+            descriptors.put(beanDescriptor.getName(), beanDescriptor);
+          }
         } catch (IntrospectionException e) {
             throw new PropertyImplementationException("Object is not a bean", e);
         }
     }
 
-    public Collection getKeys(String prefix, int type) throws PropertyException {
-        Collection keys = new ArrayList();
-        Iterator iter = descriptors.values().iterator();
+    public Collection<String> getKeys(String prefix, int type) throws PropertyException {
+        Collection<String> keys = new ArrayList<String>();
 
-        while (iter.hasNext()) {
-            PropertyDescriptor descriptor = (PropertyDescriptor) iter.next();
-
-            if (((prefix == null) || descriptor.getName().startsWith(prefix)) && ((type == 0) || (getType(descriptor.getName()) == type))) {
-                keys.add(descriptor.getName());
-            }
+      for(PropertyDescriptor descriptor : descriptors.values()) {
+        if(((prefix == null) || descriptor.getName().startsWith(prefix)) && ((type == 0) || (getType(descriptor.getName()) == type))) {
+          keys.add(descriptor.getName());
         }
+      }
 
         return keys;
     }
 
     public boolean isSettable(String property) {
-        PropertyDescriptor descriptor = (PropertyDescriptor) descriptors.get(property);
+        PropertyDescriptor descriptor = descriptors.get(property);
 
         return (descriptor != null) && (descriptor.getWriteMethod() != null);
     }
 
     public int getType(String key) throws PropertyException {
-        PropertyDescriptor descriptor = (PropertyDescriptor) descriptors.get(key);
+        PropertyDescriptor descriptor = descriptors.get(key);
 
         if (descriptor == null) {
             throw new PropertyException("No key " + key + " found");
@@ -111,7 +107,7 @@ public class BeanIntrospectorPropertySet extends AbstractPropertySet {
         return descriptors.get(key) != null;
     }
 
-    public void init(Map config, Map args) {
+    public void init(Map<String, String> config, Map<String, Object> args) {
         Object bean = args.get("bean");
         setBean(bean);
     }
@@ -129,7 +125,7 @@ public class BeanIntrospectorPropertySet extends AbstractPropertySet {
             throw new InvalidPropertyTypeException(key + " is not of type " + type);
         }
 
-        PropertyDescriptor descriptor = (PropertyDescriptor) descriptors.get(key);
+        PropertyDescriptor descriptor = descriptors.get(key);
 
         try {
             descriptor.getWriteMethod().invoke(bean, value);
@@ -147,7 +143,7 @@ public class BeanIntrospectorPropertySet extends AbstractPropertySet {
             throw new InvalidPropertyTypeException(key + " is not of type " + type);
         }
 
-        PropertyDescriptor descriptor = (PropertyDescriptor) descriptors.get(key);
+        PropertyDescriptor descriptor = descriptors.get(key);
 
         try {
 

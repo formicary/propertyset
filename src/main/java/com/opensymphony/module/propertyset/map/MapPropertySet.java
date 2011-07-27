@@ -34,19 +34,19 @@ public class MapPropertySet extends AbstractPropertySet {
     /**
     * Underlying Map storing properties.
     */
-    protected Map map;
+    protected Map<String, Object> map;
 
     //~ Methods ////////////////////////////////////////////////////////////////
 
     /**
     * The type parameter is ignored.
     */
-    public synchronized Collection getKeys(String prefix, int type) {
-        Iterator keys = map.keySet().iterator();
-        List result = new LinkedList();
+    public synchronized Collection<String> getKeys(String prefix, int type) {
+        Iterator<String> keys = map.keySet().iterator();
+        List<String> result = new ArrayList<String>();
 
         while (keys.hasNext()) {
-            String key = (String) keys.next();
+            String key = keys.next();
 
             if ((prefix == null) || key.startsWith(prefix)) {
                 result.add(key);
@@ -61,7 +61,7 @@ public class MapPropertySet extends AbstractPropertySet {
     /**
     * Set underlying map.
     */
-    public synchronized void setMap(Map map) {
+    public synchronized void setMap(Map<String, Object> map) {
         if (map == null) {
             throw new NullPointerException("Map cannot be null.");
         }
@@ -72,7 +72,7 @@ public class MapPropertySet extends AbstractPropertySet {
     /**
     * Retrieve underlying map.
     */
-    public synchronized Map getMap() {
+    public synchronized Map<String, Object> getMap() {
         return map;
     }
 
@@ -88,11 +88,11 @@ public class MapPropertySet extends AbstractPropertySet {
         return map.containsKey(key);
     }
 
-    public void init(Map config, Map args) {
-        map = (Map) args.get("map");
+    public void init(Map<String, String> config, Map<String, Object> args) {
+        map = (Map<String, Object>) args.get("map");
 
         if (map == null) {
-            map = new HashMap();
+            map = new HashMap<String, Object>();
         }
     }
 
