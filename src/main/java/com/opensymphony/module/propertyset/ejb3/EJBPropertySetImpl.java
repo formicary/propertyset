@@ -121,27 +121,27 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   }
 
   @TransactionAttribute
-  public Collection getKeys() throws PropertyException {
+  public Collection<String> getKeys() throws PropertyException {
     return super.getKeys();
   }
 
   @TransactionAttribute
-  public Collection getKeys(int type) throws PropertyException {
+  public Collection<String> getKeys(int type) throws PropertyException {
     return super.getKeys(type);
   }
 
   @TransactionAttribute
-  public Collection getKeys(String prefix) throws PropertyException {
+  public Collection<String> getKeys(String prefix) throws PropertyException {
     return super.getKeys(prefix);
   }
 
-  public Collection getKeys(String prefix, int type) throws PropertyException
+  public Collection<String> getKeys(String prefix, int type) throws PropertyException
   {
     return getKeys(entityName, entityId, prefix, type);
   }
 
   @TransactionAttribute
-  public Collection getKeys(String entityName, long entityId, String prefix, int type) throws PropertyException
+  public Collection<String> getKeys(String entityName, long entityId, String prefix, int type) throws PropertyException
   {
     Query q;
 
