@@ -69,8 +69,6 @@ public class CachingPropertySet implements PropertySet, Serializable {
             }
         } else if (value instanceof Date) {
             setDate(key, (Date) value);
-        } else if (value instanceof Properties) {
-            setProperties(key, (Properties) value);
         } else {
             setObject(key, value);
         }
@@ -113,11 +111,6 @@ public class CachingPropertySet implements PropertySet, Serializable {
 
         case DATE:
             value = getDate(key);
-
-            break;
-
-        case PROPERTIES:
-            value = getProperties(key);
 
             break;
 
@@ -222,19 +215,6 @@ public class CachingPropertySet implements PropertySet, Serializable {
         }
 
         return cachePS.getObject(key);
-    }
-
-    public void setProperties(String key, Properties value) throws PropertyException {
-        decoratedPS.setProperties(key, value);
-        cachePS.setProperties(key, value);
-    }
-
-    public Properties getProperties(String key) throws PropertyException {
-        if (!cachePS.exists(key)) {
-            cachePS.setProperties(key, decoratedPS.getProperties(key));
-        }
-
-        return cachePS.getProperties(key);
     }
 
     public boolean isSettable(String property) {

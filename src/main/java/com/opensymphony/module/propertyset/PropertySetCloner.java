@@ -133,11 +133,6 @@ public class PropertySetCloner {
             destination.setObject(key, source.getObject(key));
 
             break;
-
-        case PropertySet.PROPERTIES:
-            destination.setProperties(key, source.getProperties(key));
-
-            break;
         }
     }
 }

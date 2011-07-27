@@ -58,8 +58,6 @@ public abstract class AbstractPropertySet implements PropertySet {
             }
         } else if (value instanceof Date) {
             type = DATE;
-        } else if (value instanceof Properties) {
-            type = PROPERTIES;
         } else {
             type = OBJECT;
         }
@@ -104,11 +102,6 @@ public abstract class AbstractPropertySet implements PropertySet {
 
         case DATE:
             value = getDate(key);
-
-            break;
-
-        case PROPERTIES:
-            value = getProperties(key);
 
             break;
 
@@ -209,18 +202,6 @@ public abstract class AbstractPropertySet implements PropertySet {
     public Object getObject(String key) {
         try {
             return get(OBJECT, key);
-        } catch (NullPointerException e) {
-            return null;
-        }
-    }
-
-    public void setProperties(String key, Properties value) {
-        set(PROPERTIES, key, value);
-    }
-
-    public Properties getProperties(String key) {
-        try {
-            return (Properties) get(PROPERTIES, key);
         } catch (NullPointerException e) {
             return null;
         }
@@ -344,9 +325,6 @@ public abstract class AbstractPropertySet implements PropertySet {
         case PropertySet.OBJECT:
             return "object";
 
-        case PropertySet.PROPERTIES:
-            return "properties";
-
         default:
             return null;
         }
@@ -389,10 +367,6 @@ public abstract class AbstractPropertySet implements PropertySet {
 
         if (type.equals("object")) {
             return PropertySet.OBJECT;
-        }
-
-        if (type.equals("properties")) {
-            return PropertySet.PROPERTIES;
         }
 
         return 0;

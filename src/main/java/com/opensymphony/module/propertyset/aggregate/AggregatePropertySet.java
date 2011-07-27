@@ -302,15 +302,6 @@ public class AggregatePropertySet extends AbstractPropertySet implements Seriali
 
                     break;
 
-                case PROPERTIES:
-
-                    Properties p = set.getProperties(key);
-
-                    if (p != null) {
-                        return p;
-                    }
-
-                    break;
                 }
             } catch (PropertyException ex) {
                 //we don't really care about these here

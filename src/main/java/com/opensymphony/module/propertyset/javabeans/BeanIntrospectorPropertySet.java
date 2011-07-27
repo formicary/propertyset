@@ -104,10 +104,6 @@ public class BeanIntrospectorPropertySet extends AbstractPropertySet {
             return PropertySet.DATE;
         }
 
-        if (java.util.Properties.class.isAssignableFrom(c)) {
-            return PropertySet.PROPERTIES;
-        }
-
         return PropertySet.OBJECT;
     }
 

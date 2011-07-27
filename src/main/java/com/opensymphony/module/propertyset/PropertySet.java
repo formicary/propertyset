@@ -86,9 +86,6 @@ public interface PropertySet {
     /** Value-type serializable {@link java.lang.Object} */
     int OBJECT = 8;
 
-    /** Value-type {@link java.util.Properties} */
-    int PROPERTIES = 11;
-
     /** Value-type {@link java.lang.String} (max length 255) */
     int STRING = 5;
 
@@ -165,10 +162,6 @@ public interface PropertySet {
     void setObject(String key, Object value) throws PropertyException;
 
     Object getObject(String key) throws PropertyException;
-
-    void setProperties(String key, Properties value) throws PropertyException;
-
-    Properties getProperties(String key) throws PropertyException;
 
     /**
     * Whether this PropertySet implementation allows values to be set

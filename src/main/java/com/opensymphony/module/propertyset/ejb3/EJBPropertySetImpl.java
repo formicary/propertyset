@@ -287,11 +287,6 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
   public boolean supportsType(int type)
   {
-    if(type == PROPERTIES)
-    {
-      return false;
-    }
-
     return true;
   }
 
@@ -406,11 +401,6 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   @TransactionAttribute
   public void setObject(String key, Object value) {
     super.setObject(key, value);
-  }
-
-  @TransactionAttribute
-  public void setProperties(String key, Properties value) {
-    super.setProperties(key, value);
   }
 
   @TransactionAttribute
