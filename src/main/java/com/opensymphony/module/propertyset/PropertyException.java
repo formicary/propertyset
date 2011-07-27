@@ -4,7 +4,6 @@
  */
 package com.opensymphony.module.propertyset;
 
-
 /**
  * Parent class of all exceptions thrown by PropertySet.
  *
@@ -12,13 +11,13 @@ package com.opensymphony.module.propertyset;
  * @version $Revision: 146 $
  */
 public class PropertyException extends RuntimeException {
-    //~ Constructors ///////////////////////////////////////////////////////////
+  //~ Constructors ///////////////////////////////////////////////////////////
 
-    public PropertyException() {
-        super();
-    }
+  public PropertyException() {
+    super();
+  }
 
-    public PropertyException(String msg) {
-        super(msg);
-    }
+  public PropertyException(String msg) {
+    super(msg);
+  }
 }

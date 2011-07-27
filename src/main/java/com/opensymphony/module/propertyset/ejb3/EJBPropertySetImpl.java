@@ -7,14 +7,8 @@ package com.opensymphony.module.propertyset.ejb3;
 import java.io.Serializable;
 import java.util.*;
 import javax.annotation.PostConstruct;
-import javax.ejb.Stateful;
-import javax.ejb.TransactionAttribute;
-import javax.ejb.TransactionAttributeType;
-import javax.ejb.Remove;
-import javax.persistence.EntityManager;
-import javax.persistence.EntityTransaction;
-import javax.persistence.PersistenceContext;
-import javax.persistence.Query;
+import javax.ejb.*;
+import javax.persistence.*;
 import javax.persistence.spi.PersistenceUnitTransactionType;
 
 import com.opensymphony.module.propertyset.AbstractPropertySet;
@@ -38,8 +32,7 @@ import com.opensymphony.module.propertyset.PropertyException;
  */
 @Stateful(name = "OSPropertySet")
 @TransactionAttribute(TransactionAttributeType.SUPPORTS)
-public class EJBPropertySetImpl extends AbstractPropertySet implements EJBPropertySet
-{
+public class EJBPropertySetImpl extends AbstractPropertySet implements EJBPropertySet {
   private EntityManager entityManager;
   private Long entityId;
   private PersistenceUnitTransactionType transactionType;
@@ -49,18 +42,15 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   @PersistenceContext(unitName = "pu")
   private EntityManager injectedEntityManager;
 
-  public EJBPropertySetImpl()
-  {
+  public EJBPropertySetImpl() {
   }
 
-  public EJBPropertySetImpl(EntityManager entityManager, PersistenceUnitTransactionType transactionType)
-  {
+  public EJBPropertySetImpl(EntityManager entityManager, PersistenceUnitTransactionType transactionType) {
     this.entityManager = entityManager;
     this.transactionType = transactionType;
   }
 
-  public EJBPropertySetImpl(EntityManager entityManager, PersistenceUnitTransactionType transactionType, Long entityId, String entityName)
-  {
+  public EJBPropertySetImpl(EntityManager entityManager, PersistenceUnitTransactionType transactionType, Long entityId, String entityName) {
     this.entityManager = entityManager;
     this.entityId = entityId;
     this.entityName = entityName;
@@ -68,15 +58,13 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   }
 
   @PostConstruct
-  public void checkInjection()
-  {
+  public void checkInjection() {
     entityManager = injectedEntityManager;
     inContainer = true;
   }
 
   @Remove
-  public void destroy()
-  {
+  public void destroy() {
     entityManager = null;
     injectedEntityManager = null;
     entityId = null;
@@ -85,38 +73,31 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
   //~ Methods ////////////////////////////////////////////////////////////////
 
-  public void setEntityId(Long entityId)
-  {
+  public void setEntityId(Long entityId) {
     this.entityId = entityId;
   }
 
-  public Long getEntityId()
-  {
+  public Long getEntityId() {
     return entityId;
   }
 
-  public void setEntityManager(EntityManager entityManager)
-  {
+  public void setEntityManager(EntityManager entityManager) {
     this.entityManager = entityManager;
   }
 
-  public EntityManager getEntityManager()
-  {
+  public EntityManager getEntityManager() {
     return entityManager;
   }
 
-  public void setEntityName(String entityName)
-  {
+  public void setEntityName(String entityName) {
     this.entityName = entityName;
   }
 
-  public String getEntityName()
-  {
+  public String getEntityName() {
     return entityName;
   }
 
-  public void clear()
-  {
+  public void clear() {
     entityManager.clear();
   }
 
@@ -135,34 +116,27 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     return super.getKeys(prefix);
   }
 
-  public Collection<String> getKeys(String prefix, int type) throws PropertyException
-  {
+  public Collection<String> getKeys(String prefix, int type) throws PropertyException {
     return getKeys(entityName, entityId, prefix, type);
   }
 
   @TransactionAttribute
-  public Collection<String> getKeys(String entityName, long entityId, String prefix, int type) throws PropertyException
-  {
+  public Collection<String> getKeys(String entityName, long entityId, String prefix, int type) throws PropertyException {
     Query q;
 
-    if((type == 0) && (prefix == null))
-    {
+    if((type == 0) && (prefix == null)) {
       q = entityManager.createNamedQuery("keys");
     }
     //all types with the specified prefix
-    else if((type == 0) && (prefix != null))
-    {
+    else if((type == 0) && (prefix != null)) {
       q = entityManager.createNamedQuery("keys.prefix");
       q.setParameter("prefix", prefix + '%');
     }
     //type and prefix
-    else if((prefix == null) && (type != 0))
-    {
+    else if((prefix == null) && (type != 0)) {
       q = entityManager.createNamedQuery("keys.type");
       q.setParameter("type", type);
-    }
-    else
-    {
+    } else {
       q = entityManager.createNamedQuery("keys.prefixAndType");
       q.setParameter("prefix", prefix + '%');
       q.setParameter("type", type);
@@ -174,41 +148,34 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     return q.getResultList();
   }
 
-  public void setTransactionType(PersistenceUnitTransactionType transactionType)
-  {
+  public void setTransactionType(PersistenceUnitTransactionType transactionType) {
     this.transactionType = transactionType;
   }
 
-  public PersistenceUnitTransactionType getTransactionType()
-  {
+  public PersistenceUnitTransactionType getTransactionType() {
     return transactionType;
   }
 
-  public int getType(String key) throws PropertyException
-  {
+  public int getType(String key) throws PropertyException {
     return getType(entityName, entityId, key);
   }
 
-  public int getType(String entityName, long entityId, String key) throws PropertyException
-  {
+  public int getType(String entityName, long entityId, String key) throws PropertyException {
     EntryPK pk = new EntryPK(entityName, entityId, key);
     PropertyEntry entry = entityManager.find(PropertyEntry.class, pk);
 
-    if(entry == null)
-    {
+    if(entry == null) {
       return 0;
     }
 
     return entry.getType();
   }
 
-  public boolean exists(String key) throws PropertyException
-  {
+  public boolean exists(String key) throws PropertyException {
     return exists(entityName, entityId, key);
   }
 
-  public boolean exists(String entityName, long entityId, String key) throws PropertyException
-  {
+  public boolean exists(String entityName, long entityId, String key) throws PropertyException {
     EntryPK pk = new EntryPK(entityName, entityId, key);
     PropertyEntry entry = entityManager.find(PropertyEntry.class, pk);
 
@@ -218,13 +185,11 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   public void init(Map<String, String> config, Map<String, Object> args) {
     Object obj = args.get("manager");
 
-    if(obj == null)
-    {
+    if(obj == null) {
       throw new IllegalArgumentException("no manager argument specified");
     }
 
-    if(!(obj instanceof EntityManager))
-    {
+    if(!(obj instanceof EntityManager)) {
       throw new IllegalArgumentException("factory specifies is of type '" + obj.getClass() + "' which does not implement " + EntityManager.class.getName());
     }
 
@@ -237,32 +202,27 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   }
 
   @TransactionAttribute
-  public void remove(String key) throws PropertyException
-  {
+  public void remove(String key) throws PropertyException {
     remove(entityName, entityId, key);
   }
 
   @TransactionAttribute
-  public void remove() throws PropertyException
-  {
+  public void remove() throws PropertyException {
     remove(entityName, entityId);
   }
 
   @TransactionAttribute
-  public void remove(String entityName, long entityId, String key) throws PropertyException
-  {
+  public void remove(String entityName, long entityId, String key) throws PropertyException {
     EntryPK pk = new EntryPK(entityName, entityId, key);
     PropertyEntry entry = entityManager.find(PropertyEntry.class, pk);
 
-    if(entry != null)
-    {
+    if(entry != null) {
       entityManager.remove(entry);
     }
   }
 
   @TransactionAttribute
-  public void remove(String entityName, long entityId) throws PropertyException
-  {
+  public void remove(String entityName, long entityId) throws PropertyException {
     boolean mustCommit = joinTransaction();
     Query q = entityManager.createNamedQuery("entries");
     q.setParameter("entityId", entityId);
@@ -271,32 +231,27 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     //idiot jalopy blows up on a real man's for loop, so we have to use jdk14 wanky version
     List l = q.getResultList();
 
-    for(Iterator iterator = l.iterator(); iterator.hasNext();)
-    {
+    for(Iterator iterator = l.iterator(); iterator.hasNext(); ) {
       Object o = iterator.next();
       entityManager.remove(o);
     }
 
-    if(mustCommit)
-    {
+    if(mustCommit) {
       entityManager.getTransaction().commit();
     }
   }
 
-  public boolean supportsType(int type)
-  {
+  public boolean supportsType(int type) {
     return true;
   }
 
   @TransactionAttribute
-  protected void setImpl(int type, String key, Object value) throws PropertyException
-  {
+  protected void setImpl(int type, String key, Object value) throws PropertyException {
     setImpl(entityName, entityId, type, key, value);
   }
 
   @TransactionAttribute
-  protected void setImpl(String entityName, long entityId, int type, String key, Object value) throws PropertyException
-  {
+  protected void setImpl(String entityName, long entityId, int type, String key, Object value) throws PropertyException {
     EntryPK pk = new EntryPK(entityName, entityId, key);
     PropertyEntry item;
 
@@ -304,19 +259,15 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
     item = entityManager.find(PropertyEntry.class, pk);
 
-    if(item == null)
-    {
+    if(item == null) {
       item = new PropertyEntry();
       item.setPrimaryKey(pk);
       item.setType(type);
-    }
-    else if(item.getType() != type)
-    {
+    } else if(item.getType() != type) {
       throw new PropertyException("Existing key '" + key + "' does not have matching type of " + type(type));
     }
 
-    switch(type)
-    {
+    switch(type) {
       case BOOLEAN:
         item.setBoolValue(((Boolean)value).booleanValue());
 
@@ -360,8 +311,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     }
 
     entityManager.merge(item);
-    if(mustCommit)
-    {
+    if(mustCommit) {
       entityManager.getTransaction().commit();
     }
   }
@@ -411,29 +361,24 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     super.setString(key, value);
   }
 
-  protected Object get(int type, String key) throws PropertyException
-  {
+  protected Object get(int type, String key) throws PropertyException {
     return get(entityName, entityId, type, key);
   }
 
   @TransactionAttribute
-  protected Object get(String entityName, long entityId, int type, String key) throws PropertyException
-  {
+  protected Object get(String entityName, long entityId, int type, String key) throws PropertyException {
     EntryPK pk = new EntryPK(entityName, entityId, key);
     PropertyEntry entry = entityManager.find(PropertyEntry.class, pk);
 
-    if(entry == null)
-    {
+    if(entry == null) {
       return null;
     }
 
-    if(entry.getType() != type)
-    {
+    if(entry.getType() != type) {
       throw new PropertyException("key '" + key + "' does not have matching type of " + type(type) + ", but is of type " + type(entry.getType()));
     }
 
-    switch(type)
-    {
+    switch(type) {
       case BOOLEAN:
         return Boolean.valueOf(entry.getBoolValue());
 
@@ -462,13 +407,11 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     throw new PropertyException("type " + type(type) + " not supported");
   }
 
-  private boolean joinTransaction()
-  {
+  private boolean joinTransaction() {
     if(inContainer) return false;
     boolean mustCommit = false;
 
-    switch(transactionType)
-    {
+    switch(transactionType) {
       case JTA:
         entityManager.joinTransaction();
 
@@ -478,8 +421,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
         EntityTransaction tx = entityManager.getTransaction();
 
-        if(!tx.isActive())
-        {
+        if(!tx.isActive()) {
           tx.begin();
           mustCommit = true;
         }
@@ -490,8 +432,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
     return mustCommit;
   }
 
-  public String toString()
-  {
+  public String toString() {
     return "EJBPropertySetImpl#" + hashCode() + "{entityManager=" + entityManager + ", entityId=" + entityId + ", entityName='" + entityName + '\'' + ", inContainer=" + inContainer + '}';
   }
 }

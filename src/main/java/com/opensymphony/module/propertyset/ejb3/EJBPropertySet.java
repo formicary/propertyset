@@ -9,8 +9,7 @@ import com.opensymphony.module.propertyset.PropertySet;
  *         Date: Jul 30, 2006
  *         Time: 11:41:29 AM
  */
-public interface EJBPropertySet extends PropertySet
-{
+public interface EJBPropertySet extends PropertySet {
   void setEntityId(Long entityId);
 
   void setEntityName(String entityName);

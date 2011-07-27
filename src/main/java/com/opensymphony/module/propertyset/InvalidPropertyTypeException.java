@@ -4,7 +4,6 @@
  */
 package com.opensymphony.module.propertyset;
 
-
 /**
  * Thrown if a property is attempted to be retrieved that
  * does exist but is of different type.
@@ -13,13 +12,13 @@ package com.opensymphony.module.propertyset;
  * @version $Revision: 146 $
  */
 public class InvalidPropertyTypeException extends PropertyException {
-    //~ Constructors ///////////////////////////////////////////////////////////
+  //~ Constructors ///////////////////////////////////////////////////////////
 
-    public InvalidPropertyTypeException() {
-        super();
-    }
+  public InvalidPropertyTypeException() {
+    super();
+  }
 
-    public InvalidPropertyTypeException(String msg) {
-        super(msg);
-    }
+  public InvalidPropertyTypeException(String msg) {
+    super(msg);
+  }
 }

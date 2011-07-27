@@ -4,7 +4,6 @@
  */
 package com.opensymphony.module.propertyset;
 
-
 /**
  * Thrown if a property is set who's key matches a key of an
  * existing property with different type.
@@ -13,13 +12,13 @@ package com.opensymphony.module.propertyset;
  * @version $Revision: 146 $
  */
 public class DuplicatePropertyKeyException extends PropertyException {
-    //~ Constructors ///////////////////////////////////////////////////////////
+  //~ Constructors ///////////////////////////////////////////////////////////
 
-    public DuplicatePropertyKeyException() {
-        super();
-    }
+  public DuplicatePropertyKeyException() {
+    super();
+  }
 
-    public DuplicatePropertyKeyException(String msg) {
-        super(msg);
-    }
+  public DuplicatePropertyKeyException(String msg) {
+    super(msg);
+  }
 }

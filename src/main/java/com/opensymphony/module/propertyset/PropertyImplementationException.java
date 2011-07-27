@@ -4,11 +4,10 @@
  */
 package com.opensymphony.module.propertyset;
 
-
 /**
  * Thrown if a specific implementation exception is thrown
  * (such as EJBException, RemoteException, NamingException, IOException, etc).
- *
+ * <p/>
  * <p>A specific Exception can be wrapped in this Exception, by being
  * passed to the constructor. It can be retrieved via
  * {@link #getRootCause()} .</p>
@@ -17,35 +16,35 @@ package com.opensymphony.module.propertyset;
  * @version $Revision: 146 $
  */
 public class PropertyImplementationException extends PropertyException {
-    //~ Instance fields ////////////////////////////////////////////////////////
+  //~ Instance fields ////////////////////////////////////////////////////////
 
-    protected Throwable original;
+  protected Throwable original;
 
-    //~ Constructors ///////////////////////////////////////////////////////////
+  //~ Constructors ///////////////////////////////////////////////////////////
 
-    public PropertyImplementationException() {
-        super();
-    }
+  public PropertyImplementationException() {
+    super();
+  }
 
-    public PropertyImplementationException(String msg) {
-        super(msg);
-    }
+  public PropertyImplementationException(String msg) {
+    super(msg);
+  }
 
-    public PropertyImplementationException(String msg, Throwable original) {
-        super(msg);
-        this.original = original;
-    }
+  public PropertyImplementationException(String msg, Throwable original) {
+    super(msg);
+    this.original = original;
+  }
 
-    public PropertyImplementationException(Throwable original) {
-        this(original.getLocalizedMessage(), original);
-    }
+  public PropertyImplementationException(Throwable original) {
+    this(original.getLocalizedMessage(), original);
+  }
 
-    //~ Methods ////////////////////////////////////////////////////////////////
+  //~ Methods ////////////////////////////////////////////////////////////////
 
-    /**
-     * Retrieve original Exception.
-     */
-    public Throwable getRootCause() {
-        return original;
-    }
+  /**
+   * Retrieve original Exception.
+   */
+  public Throwable getRootCause() {
+    return original;
+  }
 }
