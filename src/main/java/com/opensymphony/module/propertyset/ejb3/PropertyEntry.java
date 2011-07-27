@@ -32,10 +32,6 @@ public class PropertyEntry {
   private Date dateValue;
   private int type;
 
-  //  @Lob
-  @Transient
-  private byte[] data;
-
   @Transient
   private transient Serializable serialized;
 
@@ -130,14 +126,6 @@ public class PropertyEntry {
 
   public void setType(int type) {
     this.type = type;
-  }
-
-  public byte[] getData() {
-    return data;
-  }
-
-  public void setData(byte[] data) {
-    this.data = data;
   }
 
   public byte[] getObjectData() {
