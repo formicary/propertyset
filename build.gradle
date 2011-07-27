@@ -1,0 +1,76 @@
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'idea'
+defaultTasks 'assemble'
+
+version = '1.5'
+group = 'formicary'
+
+configurations {
+  provided {
+    description = 'Non-exported compile-time dependencies.'
+  }
+}
+
+ideaProject {
+  javaVersion = "1.6"
+  withXml { provider ->
+    def node = provider.asNode()
+    def vcsConfig = node.component.find { it.'@name' == 'VcsDirectoryMappings' }
+    vcsConfig.mapping[0].'@vcs' = 'Git'
+  }
+}
+
+ideaModule {
+  beforeConfigured { module ->
+    module.excludeFolders.clear()
+  }
+  scopes.COMPILE.plus.add(configurations.provided)
+  whenConfigured { module ->
+    module.dependencies*.exported = true
+  }
+  excludeDirs = [
+    file(".gradle"),
+    file("$buildDir"),
+  ] as Set
+}
+
+repositories {
+  org.apache.ivy.util.url.CredentialsStore.INSTANCE.addCredentials("Sonatype Nexus Repository Manager", "nexus.formicary.net", "buildguru", "k2c7z0c6j5")
+  mavenRepo urls: ["https://nexus.formicary.net/nexus/content/groups/formicary/"]
+}
+
+sourceSets.main {
+  compileClasspath += configurations.provided
+}
+
+dependencies {
+  provided 'org.hibernate.javax.persistence:hibernate-jpa-2.0-api:1.0.0.Final'
+  provided 'javax.ejb:ejb-api:3.0'
+  provided 'org.hibernate:hibernate-core:3.6.5.Final'
+  provided 'org.hibernate:hibernate-entitymanager:3.6.5.Final'
+}
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+  classifier = 'sources'
+  from sourceSets.main.allSource
+}
+
+artifacts {
+  archives sourcesJar
+}
+
+uploadArchives {
+  //see http://gradle.1045684.n5.nabble.com/Prompting-for-passwords-tp4596449p4596963.html
+  doFirst {
+    def console = System.console()
+    uploadArchives.repositories.findByName('formicary').repository.authentication.userName = console.readLine('\n> Nexus Username: ')
+    uploadArchives.repositories.findByName('formicary').repository.authentication.password = new String(console.readPassword('> Nexus Password: '))
+  }
+  uploadDescriptor = true
+  repositories {
+    repositories.mavenDeployer([name: 'formicary']) {
+      repository(url: "https://nexus.formicary.net/nexus/content/repositories/formicary-releases") { authentication() }
+    }
+  }
+}
