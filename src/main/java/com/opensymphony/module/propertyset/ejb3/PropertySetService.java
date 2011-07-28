@@ -1,7 +1,6 @@
 package com.opensymphony.module.propertyset.ejb3;
 
 import java.util.Date;
-import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
