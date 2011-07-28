@@ -25,13 +25,13 @@ public class PropertySetService {
     EntryPK pk = new EntryPK(entityName, id, key);
     PropertyEntry entry = entityManager.find(PropertyEntry.class, pk);
     if(type == Integer.class) {
-      return (T)entry.getIntValue();
+      return (T)new Integer(entry.getIntValue());
     }
     if(type == Long.class) {
-      return (T)entry.getIntValue();
+      return (T)new Long(entry.getLongValue());
     }
     if(type == Double.class) {
-      return (T)entry.getDoubleValue();
+      return (T)new Double(entry.getDoubleValue());
     }
     if(type == Date.class) {
       return (T)entry.getDateValue();
@@ -46,7 +46,7 @@ public class PropertySetService {
       }
     }
     if(type == Boolean.class) {
-      return (T)entry.getBoolValue();
+      return (T)Boolean.valueOf(entry.getBoolValue());
     }
     throw new IllegalArgumentException("Unsupported datatype " + type + " for entity " + entityName + " key " + key);
   }
