@@ -4,7 +4,6 @@
  */
 package com.opensymphony.module.propertyset.ejb3;
 
-import java.io.Serializable;
 import java.util.*;
 import javax.annotation.PostConstruct;
 import javax.ejb.*;
@@ -242,7 +241,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
   }
 
   public boolean supportsType(int type) {
-    return true;
+    return type != OBJECT;
   }
 
   @TransactionAttribute
@@ -269,7 +268,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
     switch(type) {
       case BOOLEAN:
-        item.setBoolValue(((Boolean)value).booleanValue());
+        item.setBoolValue((Boolean)value);
 
         break;
 
@@ -300,9 +299,6 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
       case DATE:
         item.setDateValue((Date)value);
-
-      case OBJECT:
-        item.setSerialized((Serializable)value);
 
         break;
 
@@ -380,7 +376,7 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
     switch(type) {
       case BOOLEAN:
-        return Boolean.valueOf(entry.getBoolValue());
+        return entry.getBoolValue();
 
       case DOUBLE:
         return entry.getDoubleValue();
@@ -399,9 +395,6 @@ public class EJBPropertySetImpl extends AbstractPropertySet implements EJBProper
 
       case DATE:
         return entry.getDateValue();
-
-      case OBJECT:
-        return entry.getSerialized();
     }
 
     throw new PropertyException("type " + type(type) + " not supported");

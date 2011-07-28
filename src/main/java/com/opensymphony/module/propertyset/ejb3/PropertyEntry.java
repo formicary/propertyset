@@ -32,13 +32,6 @@ public class PropertyEntry {
   private Date dateValue;
   private int type;
 
-  @Transient
-  private transient Serializable serialized;
-
-  //  @Lob
-  @Transient
-  private byte[] objectData;
-
   public EntryPK getPrimaryKey() {
     return primaryKey;
   }
@@ -53,23 +46,6 @@ public class PropertyEntry {
 
   public void setBoolValue(boolean boolValue) {
     this.boolValue = boolValue;
-  }
-
-  public Serializable getSerialized() {
-    if(serialized == null) {
-      try {
-        serialized = (Serializable)deserialize(getObjectData());
-      } catch(Exception e) {
-        //can't happen hopefully
-        throw new RuntimeException("Error deserializing object", e);
-      }
-    }
-    return serialized;
-  }
-
-  public void setSerialized(Serializable serialized) {
-    this.serialized = serialized;
-    setObjectData(getSerialized(serialized));
   }
 
   public int getIntValue() {
@@ -126,31 +102,5 @@ public class PropertyEntry {
 
   public void setType(int type) {
     this.type = type;
-  }
-
-  public byte[] getObjectData() {
-    return objectData;
-  }
-
-  public void setObjectData(byte[] objectData) {
-    this.objectData = objectData;
-  }
-
-  private static byte[] getSerialized(Object object) {
-    ByteArrayOutputStream byteOut = new ByteArrayOutputStream();
-    try {
-      ObjectOutputStream out = new ObjectOutputStream(byteOut);
-      out.writeObject(object);
-      out.flush();
-      out.close();
-    } catch(IOException e) {
-      throw new RuntimeException("Error serializing " + object, e);
-    }
-    return byteOut.toByteArray();
-  }
-
-  private static Object deserialize(byte[] data) throws IOException, ClassNotFoundException {
-    ObjectInputStream in = new ObjectInputStream(new ByteArrayInputStream(data));
-    return in.readObject();
   }
 }

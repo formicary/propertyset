@@ -183,12 +183,12 @@ public abstract class AbstractPropertySet implements PropertySet {
   }
 
   public void setLong(String key, long value) {
-    set(LONG, key, new Long(value));
+    set(LONG, key, value);
   }
 
   public long getLong(String key) {
     try {
-      return ((Long)get(LONG, key)).longValue();
+      return (Long)get(LONG, key);
     } catch(NullPointerException e) {
       return 0L;
     }
@@ -271,10 +271,8 @@ public abstract class AbstractPropertySet implements PropertySet {
     result.append(" {\n");
 
     try {
-      Iterator keys = getKeys().iterator();
 
-      while(keys.hasNext()) {
-        String key = (String)keys.next();
+      for(String key : getKeys()) {
         int type = getType(key);
 
         if(type > 0) {
